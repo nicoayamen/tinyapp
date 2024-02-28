@@ -9,26 +9,19 @@ const urlDatabase = {
   "9sm5xK": "http://www.google.com"
 };
 
-app.get("/", (req, res) => {
-  res.send("Hello!");
-});
-
-app.get("/urls.json", (req, res) => {
-  res.json(urlDatabase);
-});
-
-app.get("/hello", (req, res) => {
-  res.send("<html><body>Hello <b>World</b></body></html>\n");
-});
-
+// shows the entire db of urls in /urls
 app.get("/urls", (req, res) => {
-  const templateVars = { urls: urlDatabase }
+  const templateVars = { urls: urlDatabase };
+  // renders the url_index template and passes the var above as the info shown to user
   res.render(`urls_index`, templateVars);
  });
 
+ // user can search for specific tinyURL code to see its true URL and go to site, if known
 app.get("/urls/:id", (req, res) => {
-  const urlID = req.params.id
-  const templateVars = { id: urlID, longURL: urlDatabase[urlID]}
+  // takes the searched parameter in url and shows user the url they were looking for
+  const urlID = req.params.id;
+  // needs square bracket notation in order to show longURL
+  const templateVars = { id: urlID, longURL: urlDatabase[urlID]};
   res.render(`urls_show`, templateVars);
  });
  
