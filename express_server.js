@@ -36,16 +36,24 @@ app.get("/urls", (req, res) => {
   res.render(`urls_index`, templateVars);
  });
 
+ // shows page to create new url
 app.get("/urls/new", (req, res) => {
   res.render("urls_new");
 });
 
+// allows user to create new tinyurl and have it saved in global bd
 app.post("/urls", (req, res) => {
   console.log(req.body); // Log the POST request body to the console
-  const id = generateRandomString();
-  const { longURL } = req.body;
-  urlDatabase[id] = longURL;
-  res.redirect(`/urls/${id}`); // Respond with 'Ok' (we will replace this)
+  const id = generateRandomString(); // generates the rand id key
+  const { longURL } = req.body;// assigns the longURL value
+  urlDatabase[id] = longURL; // adds to db by key-value pair.
+  res.redirect(`/urls/${id}`); // redirects user to newly created short and long url
+});
+
+app.get("/u/:id", (req, res) => {
+  const id = req.params.id
+  const longURL = urlDatabase[id];
+  res.redirect(longURL);
 });
 
  // user can search for specific tinyURL code to see its true URL and go to site, if known
