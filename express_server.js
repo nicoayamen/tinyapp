@@ -56,11 +56,12 @@ app.post("/urls/:id/delete", (req, res) => {
   res.redirect("/urls");
 });
 
+// allows user to update the longURL of a certain entry using the ID
 app.post("/urls/:id/update", (req, res) => {
   const { newLongURL } = req.body;
   const id = req.params.id;
   
-  urlDatabase[id] = newLongURL;
+  urlDatabase[id] = newLongURL; // based on the id, updates its longURL
 
   res.redirect("/urls");
 });
