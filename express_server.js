@@ -43,7 +43,6 @@ app.get("/urls/new", (req, res) => {
 
 // allows user to create new tinyurl and have it saved in global bd
 app.post("/urls", (req, res) => {
-  console.log(req.body); // Log the POST request body to the console
   const id = generateRandomString(); // generates the rand id key
   const { longURL } = req.body;// assigns the longURL value
   urlDatabase[id] = longURL; // adds to db by key-value pair.
@@ -51,7 +50,7 @@ app.post("/urls", (req, res) => {
 });
 
 app.get("/u/:id", (req, res) => {
-  const id = req.params.id
+  const id = req.params.id;
   const longURL = urlDatabase[id];
   res.redirect(longURL);
 });
