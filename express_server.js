@@ -31,6 +31,7 @@ let urlDatabase = {
 
 // shows the entire db of urls in /urls
 app.get("/urls", (req, res) => {
+
   const templateVars = { urls: urlDatabase };
   // renders the url_index template and passes the var above as the info shown to user
   res.render(`urls_index`, templateVars);
@@ -38,26 +39,33 @@ app.get("/urls", (req, res) => {
 
  // shows page to create new url
 app.get("/urls/new", (req, res) => {
+
   res.render("urls_new");
 });
 
 // allows user to create new tinyurl and have it saved in global bd
 app.post("/urls", (req, res) => {
+
   const id = generateRandomString(); // generates the rand id key
+
   const { longURL } = req.body;// assigns the longURL value
   urlDatabase[id] = longURL; // adds to db by key-value pair.
+
   res.redirect(`/urls/${id}`); // redirects user to newly created short and long url
 });
 
 // deletes entry from db and redirects
 app.post("/urls/:id/delete", (req, res) => {
+
   const deleteID = req.params.id; // assign the id user wants to delete
   delete urlDatabase[deleteID];
+
   res.redirect("/urls");
 });
 
 // allows user to update the longURL of a certain entry using the ID
 app.post("/urls/:id/update", (req, res) => {
+
   const { newLongURL } = req.body;
   const id = req.params.id;
   
@@ -68,8 +76,10 @@ app.post("/urls/:id/update", (req, res) => {
 
 // redirects user to longURL site
 app.get("/u/:id", (req, res) => {
+
   const id = req.params.id;
   const longURL = urlDatabase[id];
+  
   res.redirect(longURL);
 });
 
