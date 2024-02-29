@@ -49,12 +49,14 @@ app.post("/urls", (req, res) => {
   res.redirect(`/urls/${id}`); // redirects user to newly created short and long url
 });
 
+// deletes entry from db and redirects
 app.post("/urls/:id/delete", (req, res) => {
-  const deleteID = req.params.id;
+  const deleteID = req.params.id; // assign the id user wants to delete
   delete urlDatabase[deleteID];
   res.redirect("/urls");
 });
 
+// redirects user to longURL site
 app.get("/u/:id", (req, res) => {
   const id = req.params.id;
   const longURL = urlDatabase[id];
