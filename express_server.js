@@ -54,6 +54,7 @@ app.post("/urls", (req, res) => {
   res.redirect(`/urls/${id}`); // redirects user to newly created short and long url
 });
 
+// user creates username and stored in cookie called username
 app.post("/login", (req, res) => {
 
   const { username } = req.body;
