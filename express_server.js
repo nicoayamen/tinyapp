@@ -8,7 +8,7 @@ app.set("view engine", "ejs");
 
 // parses body for POST, to be legible to humans
 app.use(express.urlencoded({ extended: true }));
-app.use(cookieParser());
+app.use(cookieParser()); // parses cookie to show
 
 // returns a string of 6 random alphanumeric chars
 function generateRandomString() {
@@ -35,7 +35,7 @@ let urlDatabase = {
 app.get("/urls", (req, res) => {
 
   const templateVars = { 
-    username: req.cookies["username"],
+    username: req.cookies["username"], // passes username to front end conditional
     urls: urlDatabase,
   };
 
@@ -47,7 +47,7 @@ app.get("/urls", (req, res) => {
 app.get("/urls/new", (req, res) => {
   
   const templateVars = { 
-    username: req.cookies["username"],
+    username: req.cookies["username"], // passes username to front end conditional
   };
 
   res.render("urls_new", templateVars);
@@ -111,7 +111,7 @@ app.get("/urls/:id", (req, res) => {
   const templateVars = { 
     id: urlID, 
     longURL: urlDatabase[urlID],
-    username: req.cookies["username"],
+    username: req.cookies["username"], // passes username to front end conditional
   };
   res.render(`urls_show`, templateVars);
  });
