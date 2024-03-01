@@ -54,6 +54,15 @@ app.post("/urls", (req, res) => {
   res.redirect(`/urls/${id}`); // redirects user to newly created short and long url
 });
 
+app.post("/login", (req, res) => {
+
+  const { username } = req.body;
+
+  res.cookie('username', username);
+  res.send(`Hello ${username}!\n`)
+
+});
+
 // deletes entry from db and redirects
 app.post("/urls/:id/delete", (req, res) => {
 
@@ -79,7 +88,7 @@ app.get("/u/:id", (req, res) => {
 
   const id = req.params.id;
   const longURL = urlDatabase[id];
-  
+
   res.redirect(longURL);
 });
 
