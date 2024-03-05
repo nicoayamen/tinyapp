@@ -31,11 +31,26 @@ let urlDatabase = {
   "9sm5xK": "http://www.google.com"
 };
 
+
+const users = {
+  userRandomID: {
+    id: "userRandomID",
+    email: "user@example.com",
+    password: "purple-monkey-dinosaur",
+  },
+  user2RandomID: {
+    id: "user2RandomID",
+    email: "user2@example.com",
+    password: "dishwasher-funk",
+  },
+};
+
+
 // shows the entire db of urls in /urls
 app.get("/urls", (req, res) => {
 
   const templateVars = { 
-    username: req.cookies["username"], // passes username to front end conditional
+    user: req.cookies["user_id"], // passes username to front end conditional
     urls: urlDatabase,
   };
 
@@ -43,11 +58,11 @@ app.get("/urls", (req, res) => {
   res.render(`urls_index`, templateVars);
  });
 
- // shows page to create new url
+// shows page to create new url
 app.get("/urls/new", (req, res) => {
   
   const templateVars = { 
-    username: req.cookies["username"], // passes username to front end conditional
+    user: req.cookies["user_id"], // passes username to front end conditional
   };
 
   res.render("urls_new", templateVars);
@@ -64,28 +79,47 @@ app.post("/urls", (req, res) => {
   res.redirect(`/urls/${id}`); // redirects user to newly created short and long url
 });
 
+// show the register page
 app.get('/register', function(req, res, next) { 
   
   const templateVars = { 
-    username: req.cookies["username"], // passes username to front end conditional
+    user: req.cookies["user_id"], // passes username to front end conditional
   };
 
   res.render('register', templateVars)
 }); 
 
+// post for register page
+app.post("/register", (req, res) => {
+
+  let { password } = req.body;
+  let { email } = req.body;
+  let id = generateRandomString();
+
+  users[id] = {
+    id: id,
+    email: email,
+    password: password
+  }
+
+
+  res.cookie('user_id', users[id].email);
+  res.redirect('/urls')
+  
+ 
+
+});
+
 // user creates username and stored in cookie called username
 app.post("/login", (req, res) => {
 
-  const { username } = req.body;
-
-  res.cookie('username', username);
   res.redirect("/urls");
 
 });
 
 app.post("/logout", (req, res) => {
 
-  res.clearCookie('username');
+  res.clearCookie('user_id');
   res.redirect("/urls");
 
 });
@@ -127,7 +161,7 @@ app.get("/urls/:id", (req, res) => {
   const templateVars = { 
     id: urlID, 
     longURL: urlDatabase[urlID],
-    username: req.cookies["username"], // passes username to front end conditional
+    user: req.cookies["user_id"], // passes username to front end conditional
   };
   res.render(`urls_show`, templateVars);
  });
