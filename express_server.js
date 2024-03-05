@@ -50,7 +50,7 @@ const users = {
 app.get("/urls", (req, res) => {
 
   const templateVars = { 
-    user: req.cookies["user_id"], // passes username to front end conditional
+    user: req.cookies["user_id"], // passes user_id to front end conditional
     urls: urlDatabase,
   };
 
@@ -62,7 +62,7 @@ app.get("/urls", (req, res) => {
 app.get("/urls/new", (req, res) => {
   
   const templateVars = { 
-    user: req.cookies["user_id"], // passes username to front end conditional
+    user: req.cookies["user_id"], // passes user_id to front end conditional
   };
 
   res.render("urls_new", templateVars);
@@ -82,7 +82,7 @@ app.post("/urls", (req, res) => {
 // show the register page
 app.get('/register', function(req, res, next) { 
   const templateVars = { 
-    user: req.cookies["user_id"], // passes username to front end conditional
+    user: req.cookies["user_id"], // passes user_id to front end conditional
   };
 
   res.render('register', templateVars)
@@ -94,6 +94,7 @@ app.post("/register", (req, res) => {
   let { password, email  } = req.body;
   let id = generateRandomString();
 
+  // creates an object inside users obj with random ID
   users[id] = {
     id: id,
     email: email,
@@ -108,7 +109,7 @@ app.post("/register", (req, res) => {
 
 });
 
-// user creates username and stored in cookie called username
+// user creates user_id and stored in cookie called user_id
 app.post("/login", (req, res) => {
 
   res.redirect("/urls");
@@ -159,7 +160,7 @@ app.get("/urls/:id", (req, res) => {
   const templateVars = { 
     id: urlID, 
     longURL: urlDatabase[urlID],
-    user: req.cookies["user_id"], // passes username to front end conditional
+    user: req.cookies["user_id"], // passes user_id to front end conditional
   };
   res.render(`urls_show`, templateVars);
  });
