@@ -1,7 +1,7 @@
 const express = require("express");
 const app = express();
 const PORT = 8080; // default port 8080
-const cookieParser = require('cookie-parser'); 
+const cookieParser = require('cookie-parser');
 
 // setting the ejs engine for our express app
 app.set("view engine", "ejs");
@@ -49,19 +49,19 @@ const users = {
 // shows the entire db of urls in /urls
 app.get("/urls", (req, res) => {
 
-  const templateVars = { 
+  const templateVars = {
     user: req.cookies["user_id"], // passes user_id to front end conditional
     urls: urlDatabase,
   };
 
   // renders the url_index template and passes the var above as the info shown to user
   res.render(`urls_index`, templateVars);
- });
+});
 
 // shows page to create new url
 app.get("/urls/new", (req, res) => {
-  
-  const templateVars = { 
+
+  const templateVars = {
     user: req.cookies["user_id"], // passes user_id to front end conditional
   };
 
@@ -80,18 +80,18 @@ app.post("/urls", (req, res) => {
 });
 
 // show the register page
-app.get('/register', function(req, res, next) { 
-  const templateVars = { 
+app.get('/register', function(req, res, next) {
+  const templateVars = {
     user: req.cookies["user_id"], // passes user_id to front end conditional
   };
 
-  res.render('register', templateVars)
-}); 
+  res.render('register', templateVars);
+});
 
 // post for register page
 app.post("/register", (req, res) => {
 
-  let { password, email  } = req.body;
+  let { password, email } = req.body;
   let id = generateRandomString();
 
   // creates an object inside users obj with random ID
@@ -99,13 +99,13 @@ app.post("/register", (req, res) => {
     id: id,
     email: email,
     password: password
-  }
+  };
 
 
   res.cookie('user_id', users[id]);
-  res.redirect('/urls')
-  
- 
+  res.redirect('/urls');
+
+
 
 });
 
@@ -137,7 +137,7 @@ app.post("/urls/:id/update", (req, res) => {
 
   const { newLongURL } = req.body;
   const id = req.params.id;
-  
+
   urlDatabase[id] = newLongURL; // based on the id, updates its longURL
 
   res.redirect("/urls");
@@ -145,26 +145,26 @@ app.post("/urls/:id/update", (req, res) => {
 
 // redirects user to longURL site
 app.get("/u/:id", (req, res) => {
-  
+
   const id = req.params.id;
   const longURL = urlDatabase[id];
 
   res.redirect(longURL);
 });
 
- // user can search for specific tinyURL code to see its true URL and go to site, if known
+// user can search for specific tinyURL code to see its true URL and go to site, if known
 app.get("/urls/:id", (req, res) => {
   // takes the searched parameter in url and shows user the url they were looking for
   const urlID = req.params.id;
   // needs square bracket notation in order to show longURL
-  const templateVars = { 
-    id: urlID, 
+  const templateVars = {
+    id: urlID,
     longURL: urlDatabase[urlID],
     user: req.cookies["user_id"], // passes user_id to front end conditional
   };
   res.render(`urls_show`, templateVars);
- });
- 
+});
+
 
 app.listen(PORT, () => {
   console.log(`Example app listening on port ${PORT}!`);
