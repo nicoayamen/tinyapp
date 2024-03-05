@@ -64,6 +64,15 @@ app.post("/urls", (req, res) => {
   res.redirect(`/urls/${id}`); // redirects user to newly created short and long url
 });
 
+app.get('/register', function(req, res, next) { 
+  
+  const templateVars = { 
+    username: req.cookies["username"], // passes username to front end conditional
+  };
+
+  res.render('register', templateVars)
+}); 
+
 // user creates username and stored in cookie called username
 app.post("/login", (req, res) => {
 
