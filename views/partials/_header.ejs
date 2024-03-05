@@ -24,7 +24,7 @@
       <button type="submit" class="btn btn-primary">Login</button>
       </form>
     <% } else { %>
-      <p>Hello, <%= user %></p>
+      <p>Hello, <%= user.email %></p>
       <form method="POST" action="/logout">
         <button type="submit" class="btn btn-secondary">Logout</button>
         </form>
