@@ -81,7 +81,6 @@ app.post("/urls", (req, res) => {
 
 // show the register page
 app.get('/register', function(req, res, next) { 
-  
   const templateVars = { 
     user: req.cookies["user_id"], // passes username to front end conditional
   };
@@ -92,8 +91,7 @@ app.get('/register', function(req, res, next) {
 // post for register page
 app.post("/register", (req, res) => {
 
-  let { password } = req.body;
-  let { email } = req.body;
+  let { password, email  } = req.body;
   let id = generateRandomString();
 
   users[id] = {
@@ -103,7 +101,7 @@ app.post("/register", (req, res) => {
   }
 
 
-  res.cookie('user_id', users[id].email);
+  res.cookie('user_id', users[id]);
   res.redirect('/urls')
   
  
