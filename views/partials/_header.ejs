@@ -18,13 +18,13 @@
         <a class="nav-item nav-link" href="/urls/new">Create New URL</a>
       </div>
     </div>
-    <% if (!username) { %>
+    <% if (!user) { %>
     <form method="POST" action="/login">
-      <input type="text" name="username" placeholder="Username"/>
+      <input type="text" name="user" placeholder="Username"/>
       <button type="submit" class="btn btn-primary">Login</button>
       </form>
     <% } else { %>
-      <p>Hello, <%= username %></p>
+      <p>Hello, <%= user %></p>
       <form method="POST" action="/logout">
         <button type="submit" class="btn btn-secondary">Logout</button>
         </form>
