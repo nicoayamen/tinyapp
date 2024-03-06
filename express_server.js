@@ -127,6 +127,11 @@ app.post("/register", (req, res) => {
 
 });
 
+app.get("/login", (req, res) => {
+
+  res.render('login');
+})
+
 // user creates user_id and stored in cookie called user_id
 app.post("/login", (req, res) => {
 
