@@ -130,6 +130,15 @@ app.post("/register", (req, res) => {
 // user creates user_id and stored in cookie called user_id
 app.post("/login", (req, res) => {
 
+  // checks if email or password exists. password is required on the front-end
+  if (!email || !password) {
+    return res.status(400).send(`Password and Email cannot be blank`);
+  }
+  // uses the global func to check if email exists
+  if (getUserByEmail(email)) {
+    return res.status(400).send(`Email already exists to an account`);
+  }
+
   res.redirect("/urls");
 
 });
