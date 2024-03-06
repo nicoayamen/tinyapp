@@ -128,20 +128,20 @@ app.post("/register", (req, res) => {
 });
 
 app.get("/login", (req, res) => {
-  
+
   const templateVars = {
     user: req.cookies["user_id"]
-  }
+  };
 
   res.render('login', templateVars);
-})
+});
 
 // user creates user_id and stored in cookie called user_id
 app.post("/login", (req, res) => {
 
   let { password, email } = req.body;
   let user = getUserByEmail(email);
-  
+
 
   // checks if email exists.
   if (!user) {
@@ -150,11 +150,11 @@ app.post("/login", (req, res) => {
   // checks to see if the password in the usersdb
   if (user.password !== password) {
     return res.status(403).send(`Incorrect password. Please try again.`);
-  } 
-  
-    res.cookie("user_id", user);
-    res.redirect("/urls");
- 
+  }
+
+  res.cookie("user_id", user);
+  res.redirect("/urls");
+
 });
 
 app.post("/logout", (req, res) => {

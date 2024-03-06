@@ -13,13 +13,13 @@
     </div>
     <% if (!user) { %>
       <div class="navbar-nav">
-      <a href="/register">
-        <button style="margin-right: 5px;" type="submit" class="btn btn-primary">Register</button>
-      </a>
-      <a href="/login">
-        <button type="submit" class="btn btn-primary">Login</button>
-      </a>
-    </div>
+        <a href="/register">
+          <button style="margin-right: 5px;" type="submit" class="btn btn-primary">Register</button>
+        </a>
+        <a href="/login">
+          <button type="submit" class="btn btn-primary">Login</button>
+        </a>
+      </div>
       <% } else { %>
         <p style="padding-right: 15px;"><b>Hello, <%= user.email %>! </b></p>
         <form method="POST" action="/logout">
