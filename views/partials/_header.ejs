@@ -12,12 +12,12 @@
       </div>
     </div>
     <% if (!user) { %>
-      <form method="GET" action="/register">
+      <a href="/register">
         <button type="submit" class="btn btn-primary">Register</button>
-      </form>
-      <form method="GET" action="/login">
+      </a>
+      <a href="/login">
         <button type="submit" class="btn btn-primary">Login</button>
-      </form>
+      </a>
       <% } else { %>
         <form method="POST" action="/logout">
           <button type="submit" class="btn btn-secondary">Logout</button>
