@@ -45,6 +45,15 @@ const users = {
   },
 };
 
+function getUserByEmail(email) {
+
+  for (let key in users) {
+    if (users[key].email === email) {
+      return users[key];
+    }
+  }
+  return null;
+};
 
 // shows the entire db of urls in /urls
 app.get("/urls", (req, res) => {
@@ -93,6 +102,15 @@ app.post("/register", (req, res) => {
 
   let { password, email } = req.body;
   let id = generateRandomString();
+
+  // checks if email or password exists. password is required on the front-end
+  if (!email || !password) {
+    return res.status(400).send(`Password and Email cannot be blank`);
+  }
+  // uses the global func to check if email exists
+  if (getUserByEmail(email)) {
+    return res.status(400).send(`Email already exists to an account`);
+  }
 
   // creates an object inside users obj with random ID
   users[id] = {
