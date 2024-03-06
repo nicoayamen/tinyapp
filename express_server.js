@@ -128,30 +128,39 @@ app.post("/register", (req, res) => {
 });
 
 app.get("/login", (req, res) => {
+  
+  const templateVars = {
+    user: req.cookies["user_id"]
+  }
 
-  res.render('login');
+  res.render('login', templateVars);
 })
 
 // user creates user_id and stored in cookie called user_id
 app.post("/login", (req, res) => {
 
-  // checks if email or password exists. password is required on the front-end
-  if (!email || !password) {
-    return res.status(400).send(`Password and Email cannot be blank`);
-  }
-  // uses the global func to check if email exists
-  if (getUserByEmail(email)) {
-    return res.status(400).send(`Email already exists to an account`);
-  }
+  let { password, email } = req.body;
+  let user = getUserByEmail(email);
+  
 
-  res.redirect("/urls");
-
+  // checks if email exists.
+  if (!user) {
+    return res.status(403).send(`Email not found, please register.`);
+  }
+  // checks to see if the password in the usersdb
+  if (user.password !== password) {
+    return res.status(403).send(`Incorrect password. Please try again.`);
+  } 
+  
+    res.cookie("user_id", user);
+    res.redirect("/urls");
+ 
 });
 
 app.post("/logout", (req, res) => {
 
   res.clearCookie('user_id');
-  res.redirect("/urls");
+  res.redirect("/login");
 
 });
 
