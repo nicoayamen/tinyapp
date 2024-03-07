@@ -2,6 +2,7 @@ const express = require("express");
 const app = express();
 const PORT = 8080; // default port 8080
 const cookieParser = require('cookie-parser');
+const { getUserByEmail, generateRandomString, isLoggedIn, isNotLoggedIn, postURLProtect, checkShortURL, users, urlDatabase } = require('./functions/helperFunctions');
 
 // setting the ejs engine for our express app
 app.set("view engine", "ejs");
@@ -9,51 +10,6 @@ app.set("view engine", "ejs");
 // parses body for POST, to be legible to humans
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser()); // parses cookie to show
-
-// returns a string of 6 random alphanumeric chars
-function generateRandomString() {
-  const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-  let randString = "";
-
-  for (let i = 0; i < 6; i++) {
-    let randIndex = Math.floor(Math.random() * chars.length);
-    randString += chars.charAt(randIndex);
-  }
-
-  return randString;
-
-
-}
-
-
-let urlDatabase = {
-  "b2xVn2": "http://www.lighthouselabs.ca",
-  "9sm5xK": "http://www.google.com"
-};
-
-
-const users = {
-  userRandomID: {
-    id: "userRandomID",
-    email: "user@example.com",
-    password: "purple-monkey-dinosaur",
-  },
-  user2RandomID: {
-    id: "user2RandomID",
-    email: "user2@example.com",
-    password: "dishwasher-funk",
-  },
-};
-
-function getUserByEmail(email) {
-
-  for (let key in users) {
-    if (users[key].email === email) {
-      return users[key];
-    }
-  }
-  return null;
-};
 
 // shows the entire db of urls in /urls
 app.get("/urls", (req, res) => {
@@ -68,7 +24,7 @@ app.get("/urls", (req, res) => {
 });
 
 // shows page to create new url
-app.get("/urls/new", (req, res) => {
+app.get("/urls/new", isNotLoggedIn, (req, res) => {
 
   const templateVars = {
     user: req.cookies["user_id"], // passes user_id to front end conditional
@@ -78,7 +34,7 @@ app.get("/urls/new", (req, res) => {
 });
 
 // allows user to create new tinyurl and have it saved in global bd
-app.post("/urls", (req, res) => {
+app.post("/urls", postURLProtect, (req, res) => {
 
   const id = generateRandomString(); // generates the rand id key
 
@@ -89,7 +45,7 @@ app.post("/urls", (req, res) => {
 });
 
 // show the register page
-app.get('/register', function(req, res, next) {
+app.get('/register', isLoggedIn, function(req, res, next) {
   const templateVars = {
     user: req.cookies["user_id"], // passes user_id to front end conditional
   };
@@ -127,7 +83,7 @@ app.post("/register", (req, res) => {
 
 });
 
-app.get("/login", (req, res) => {
+app.get("/login", isLoggedIn, (req, res) => {
 
   const templateVars = {
     user: req.cookies["user_id"]
@@ -185,7 +141,7 @@ app.post("/urls/:id/update", (req, res) => {
 });
 
 // redirects user to longURL site
-app.get("/u/:id", (req, res) => {
+app.get("/u/:id", checkShortURL, (req, res) => {
 
   const id = req.params.id;
   const longURL = urlDatabase[id];
