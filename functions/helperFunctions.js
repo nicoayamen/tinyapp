@@ -6,7 +6,7 @@ let urlDatabase = {
   },
   i3BoGr: {
     longURL: "https://www.google.ca",
-    userID: "aJ48lW",
+    userID: "aJ48lW", // obviously user ID too
   },
 };
 
@@ -79,7 +79,7 @@ function postURLProtect(req, res, next) {
 
 function checkShortURL(req, res, next) {
   const id = req.params.id;
-  
+
   if (!urlDatabase[id]) {
     res.render('error_id');
   } else {
@@ -87,6 +87,16 @@ function checkShortURL(req, res, next) {
   }
 }
 
+function urlsForUser(id) {
+  const usersUrls = {};
+
+  for (key in urlDatabase) {
+    if (id === urlDatabase[key].userID) {
+      usersUrls[key] = urlDatabase[key];
+    }
+  }
+  return usersUrls;
+}
 
 
 module.exports = {
@@ -96,6 +106,7 @@ module.exports = {
   isNotLoggedIn,
   postURLProtect,
   checkShortURL,
+  urlsForUser,
   urlDatabase,
   users,
 };
