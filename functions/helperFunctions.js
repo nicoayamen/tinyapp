@@ -1,7 +1,13 @@
 
 let urlDatabase = {
-  "b2xVn2": "http://www.lighthouselabs.ca",
-  "9sm5xK": "http://www.google.com"
+  b6UTxQ: { // is our id for longURL
+    longURL: "https://www.tsn.ca",
+    userID: "aJ48lW", // obviously user ID
+  },
+  i3BoGr: {
+    longURL: "https://www.google.ca",
+    userID: "aJ48lW",
+  },
 };
 
 
@@ -46,7 +52,7 @@ function getUserByEmail(email) {
 
 function isLoggedIn(req, res, next) {
   //check to see if user_id cookie is true (stored)
-  if (req.cookies.user_id) {
+  if (req.session.user_id) {
     //if cookie is found, user is logged in. Redirect to /urls.
     res.redirect('/urls');
   } else {
@@ -56,7 +62,7 @@ function isLoggedIn(req, res, next) {
 };
 
 function isNotLoggedIn(req, res, next) {
-  if (!req.cookies.user_id) {
+  if (!req.session.user_id) {
     res.redirect('/login');
   } else {
     next();
@@ -64,7 +70,7 @@ function isNotLoggedIn(req, res, next) {
 }
 
 function postURLProtect(req, res, next) {
-  if (!req.cookies.user_id) {
+  if (!req.session.user_id) {
     res.render('error');
   } else {
     next();
