@@ -21,11 +21,12 @@ app.get("/urls", postURLProtect, (req, res) => {
   const userId = req.session.user_id;
   const user = users[userId];
 
+  // checks to see what urls does specific user own
   let usersUrls = urlsForUser(userId);
 
   const templateVars = {
     user: user, // passes user_id to front end conditional
-    urls: usersUrls, // shows user specific urls
+    urls: usersUrls, // shows user owned urls only. Blank if none created...
   };
 
   // renders the url_index template and passes the var above as the info shown to user
@@ -139,6 +140,7 @@ app.post("/login", (req, res) => {
     return res.status(403).send(`Incorrect password. Please try again.`);
   }
 
+  // tells the session that this is the users cookie ID
   req.session.user_id = user.id;
   res.redirect("/urls");
 
@@ -146,6 +148,7 @@ app.post("/login", (req, res) => {
 
 app.post("/logout", (req, res) => {
 
+  // clears cookie in logout, or close session...
   req.session = null;
   res.redirect("/login");
 
@@ -170,6 +173,7 @@ app.post("/urls/:id/delete", (req, res) => {
     return res.send(`Access Denied. You do not own this URL!`);
   }
 
+  // if user owns it, delete
   else {
     delete urlDatabase[deleteID];
   }
@@ -187,6 +191,7 @@ app.post("/urls/:id/update", (req, res) => {
 
   const userId = req.session.user_id;
 
+  // urls id in the db to check if user owns it below
   const url = urlDatabase[id];
 
   // check if URL exists
@@ -199,6 +204,7 @@ app.post("/urls/:id/update", (req, res) => {
     return res.send(`Access Denied. You do not own this URL!`);
   }
 
+  // if user owns it, edit/update
   else {
     urlDatabase[id].longURL = newLongURL; // based on the id, updates its longURL
   }
