@@ -2,7 +2,7 @@ const express = require("express");
 const app = express();
 const PORT = 8080; // default port 8080
 const cookieSession = require('cookie-session');
-const { getUserByEmail, generateRandomString, isLoggedIn, isNotLoggedIn, postURLProtect, checkShortURL, users, urlDatabase } = require('./functions/helperFunctions');
+const { getUserByEmail, generateRandomString, isLoggedIn, isNotLoggedIn, postURLProtect, checkShortURL, urlsForUser, users, urlDatabase } = require('./functions/helperFunctions');
 
 // setting the ejs engine for our express app
 app.set("view engine", "ejs");
@@ -16,14 +16,16 @@ app.use(cookieSession({
 }));
 
 // shows the entire db of urls in /urls
-app.get("/urls", (req, res) => {
+app.get("/urls", postURLProtect, (req, res) => {
 
   const userId = req.session.user_id;
   const user = users[userId];
 
+  let usersUrls = urlsForUser(userId);
+
   const templateVars = {
     user: user, // passes user_id to front end conditional
-    urls: urlDatabase,
+    urls: usersUrls, // shows user specific urls
   };
 
   // renders the url_index template and passes the var above as the info shown to user
@@ -68,7 +70,7 @@ app.post("/urls", postURLProtect, (req, res) => {
 
 // show the register page
 app.get('/register', isLoggedIn, function(req, res, next) {
-  
+
   const userId = req.session.user_id;
   const user = users[userId];
 
@@ -103,9 +105,8 @@ app.post("/register", (req, res) => {
 
 
   req.session.user_id = id;
+
   res.redirect('/urls');
-
-
 
 });
 
@@ -180,20 +181,33 @@ app.get("/u/:id", checkShortURL, (req, res) => {
 });
 
 // user can search for specific tinyURL code to see its true URL and go to site, if known
-app.get("/urls/:id", (req, res) => {
+app.get("/urls/:id", isNotLoggedIn, (req, res) => {
 
   const userId = req.session.user_id;
   const user = users[userId];
 
   // takes the searched parameter in url and shows user the url they were looking for
   const urlID = req.params.id;
+  const url = urlDatabase[urlID]
+
+  // check if URL exists
+  if (!url) {
+    return res.send("URL Does Not Exist!");
+  }
+
+  // now check if url belongs to user
+  if (url.userID !== userId) {
+    return res.send(`Access Denied. You do not own this URL!`);
+  }
+
   // needs square bracket notation in order to show longURL
   const templateVars = {
     id: urlID,
     longURL: urlDatabase[urlID].longURL,
     user: user, // passes user_id to front end conditional
   };
-  res.render(`urls_show`, templateVars);
+
+    res.render(`urls_show`, templateVars);
 });
 
 
