@@ -154,8 +154,27 @@ app.post("/logout", (req, res) => {
 // deletes entry from db and redirects
 app.post("/urls/:id/delete", (req, res) => {
 
+  const userId = req.session.user_id;
+
+  // takes the searched parameter in url and shows user the url they were looking for
   const deleteID = req.params.id; // assign the id user wants to delete
-  delete urlDatabase[deleteID];
+  const url = urlDatabase[deleteID];
+
+  // check if URL exists
+  if (!url) {
+    return res.send("URL Does Not Exist!");
+  }
+
+  // now check if url belongs to user
+  if (url.userID !== userId) {
+    return res.send(`Access Denied. You do not own this URL!`);
+  }
+
+  else {
+    delete urlDatabase[deleteID];
+  }
+  
+  
 
   res.redirect("/urls");
 });
@@ -166,7 +185,24 @@ app.post("/urls/:id/update", (req, res) => {
   const { newLongURL } = req.body;
   const id = req.params.id;
 
-  urlDatabase[id].longURL = newLongURL; // based on the id, updates its longURL
+  const userId = req.session.user_id;
+
+  const url = urlDatabase[id];
+
+  // check if URL exists
+  if (!url) {
+    return res.send("URL Does Not Exist!");
+  }
+
+  // now check if url belongs to user
+  if (url.userID !== userId) {
+    return res.send(`Access Denied. You do not own this URL!`);
+  }
+
+  else {
+    urlDatabase[id].longURL = newLongURL; // based on the id, updates its longURL
+  }
+  
 
   res.redirect("/urls");
 });
