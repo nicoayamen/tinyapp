@@ -20,12 +20,12 @@ describe('getUserByEmail', function() {
     const user = getUserByEmail("user@example.com", testUsers)
     const expectedUserID = "userRandomID";
     // Write your assert statement here
-    assert(user.id === expectedUserID, `Expected user ID to be ${expectedUserID}`)
+    assert.deepEqual(user.id, expectedUserID, `Expected user ID to be ${expectedUserID}`)
   });
 
   it(`should return null with invalid email`, function() {
     const user = getUserByEmail("cait2@gmail.com", testUsers)
 
-    assert(user === null, `User email does not exists`)
+    assert.deepEqual(user, null, `User email does not exists`)
   });
 });
