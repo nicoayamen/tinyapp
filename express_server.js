@@ -64,7 +64,6 @@ app.get("/urls/new", isNotLoggedIn, (req, res) => {
 // allows user to create new tinyurl and have it saved in global bd
 app.post("/urls", postURLProtect, (req, res) => {
 
-
   const id = generateRandomString(); // generates the rand id key
 
   const { longURL } = req.body;// assigns the longURL value
@@ -129,7 +128,6 @@ app.post("/register", (req, res) => {
 });
 
 app.get("/login", isLoggedIn, (req, res) => {
-
 
   const userId = req.session.user_id;
   const user = users[userId];
