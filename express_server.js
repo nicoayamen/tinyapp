@@ -101,15 +101,14 @@ app.post("/register", (req, res) => {
     return res.status(400).send(`Email already exists to an account`);
   }
 
+  req.session.user_id = id;
+
   // creates an object inside users obj with random ID
   users[id] = {
     id: id,
     email: email,
     password: hashedPassword // replace plain pass with hashedPass
   };
-
-
-  req.session.user_id = id;
 
   res.redirect('/urls');
 
