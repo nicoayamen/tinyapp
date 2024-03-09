@@ -50,10 +50,6 @@ app.get("/urls/new", isNotLoggedIn, (req, res) => {
 // allows user to create new tinyurl and have it saved in global bd
 app.post("/urls", postURLProtect, (req, res) => {
 
-  // Check if user is logged in
-  if (!userID) {
-    return res.status(403).render("error");
-  }
 
   const id = generateRandomString(); // generates the rand id key
 
@@ -61,6 +57,10 @@ app.post("/urls", postURLProtect, (req, res) => {
 
   const userID = req.session.user_id; // Assuming you're storing loggedIn userId in session
 
+  // Check if user is logged in
+  if (!userID) {
+    return res.status(403).render("error");
+  }
 
   urlDatabase[id] = {
     longURL: longURL,
