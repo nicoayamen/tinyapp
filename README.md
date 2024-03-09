@@ -1,6 +1,6 @@
 # TinyApp
 
-TinyApp is a lightweight and user-friendly web application for shortening URLs. It allows users to easily generate shorter, more manageable versions of long URLs, making sharing and tracking links simpler!
+TinyApp is a lightweight and user-friendly web application for shortening URLs. It allows users to easily generate shorter, more manageable versions of long URLs, making sharing links simpler!
 
 ## Features
 
