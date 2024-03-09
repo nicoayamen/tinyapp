@@ -40,11 +40,11 @@ function generateRandomString() {
 }
 
 // checks to see if user email exists
-function getUserByEmail(email) {
+function getUserByEmail(email, database) {
 
-  for (let key in users) {
-    if (users[key].email === email) {
-      return users[key];
+  for (let key in database) {
+    if (database[key].email === email) {
+      return database[key];
     }
   }
   return null;
