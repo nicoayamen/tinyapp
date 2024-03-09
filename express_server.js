@@ -10,7 +10,6 @@ app.set("view engine", "ejs");
 
 // parses body for POST, to be legible to humans
 app.use(express.urlencoded({ extended: true }));
-app.use(express.json());
 // use cookieSession and encrypt the cookie
 app.use(cookieSession({
   name: 'session',
@@ -53,7 +52,7 @@ app.post("/urls", postURLProtect, (req, res) => {
 
   // Check if user is logged in
   if (!userID) {
-    return res.status(403).send("You must be logged in to shorten URLs.");
+    return res.status(403).render("error");
   }
 
   const id = generateRandomString(); // generates the rand id key
@@ -95,14 +94,14 @@ app.post("/register", (req, res) => {
 
   // checks if email or password exists. password is required on the front-end
   if (!email || !password) {
-    return res.status(400).send(`Password and Email cannot be blank`);
+    return res.status(400).render("error_empty");
   }
   // uses the global func to check if email exists
   if (getUserByEmail(email, users)) {
-    return res.status(400).send(`Email already exists to an account`);
+    return res.status(400).render("error_exist");
   }
 
-  req.session.user_id = id;
+  
 
   // creates an object inside users obj with random ID
   users[id] = {
@@ -111,6 +110,7 @@ app.post("/register", (req, res) => {
     password: hashedPassword // replace plain pass with hashedPass
   };
 
+  req.session.user_id = id;
   res.redirect('/urls');
 
 });
@@ -137,11 +137,11 @@ app.post("/login", (req, res) => {
 
   // checks if email exists.
   if (!user) {
-    return res.status(403).send(`Email not found, please register.`);
+    return res.status(403).render("error_nFound");
   }
   // checks to see if the hashed password in the usersdb is the same as password being used 
   if (!bcrypt.compareSync(password, user.password)) {
-    return res.status(403).send(`Incorrect E-mail or password. Please try again.`);
+    return res.status(403).render("error_cred");
   }
 
   // tells the session that this is the users cookie ID
@@ -169,12 +169,12 @@ app.post("/urls/:id/delete", (req, res) => {
 
   // check if URL exists
   if (!url) {
-    return res.send("URL Does Not Exist!");
+    return res.render("error_urlExists");
   }
 
   // now check if url belongs to user
   if (url.userID !== userId) {
-    return res.send(`Access Denied. You do not own this URL!`);
+    return res.render("error_denied");
   }
 
   // if user owns it, delete
@@ -200,12 +200,12 @@ app.post("/urls/:id/update", (req, res) => {
 
   // check if URL exists
   if (!url) {
-    return res.send("URL Does Not Exist!");
+    return res.render("error_urlExists");
   }
 
   // now check if url belongs to user
   if (url.userID !== userId) {
-    return res.send(`Access Denied. You do not own this URL!`);
+    return res.render("error_denied");
   }
 
   // if user owns it, edit/update
@@ -238,12 +238,12 @@ app.get("/urls/:id", isNotLoggedIn, (req, res) => {
 
   // check if URL exists
   if (!url) {
-    return res.send("URL Does Not Exist!");
+    return res.render("error_urlExists");
   }
 
   // now check if url belongs to user
   if (url.userID !== userId) {
-    return res.send(`Access Denied. You do not own this URL!`);
+    return res.render("error_denied");
   }
 
   // needs square bracket notation in order to show longURL
