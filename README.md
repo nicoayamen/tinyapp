@@ -11,7 +11,7 @@ TinyApp is a lightweight and user-friendly web application for shortening URLs. 
 
 ## Technologies Used
 
-- **Frontend:** HTML, CSS, JavaScript, EJS
+- **Frontend:** HTML, CSS, JavaScript, EJS, Bootstrap
 - **Backend:** Node.js, Express.js
 - **Authentication:** cookie-session, bcryptjs
 
