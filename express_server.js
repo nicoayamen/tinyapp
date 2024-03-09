@@ -16,6 +16,19 @@ app.use(cookieSession({
   keys: ['key1', 'key2']
 }));
 
+app.get("/", (req, res) => {
+
+  const userId = req.session.user_id;
+
+  if (!userId) {
+    return res.redirect("/login")
+  }
+  else {
+    return res.redirect("/urls");
+  }
+
+})
+
 // shows the entire db of urls in /urls
 app.get("/urls", postURLProtect, (req, res) => {
 
