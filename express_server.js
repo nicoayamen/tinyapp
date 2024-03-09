@@ -54,7 +54,7 @@ app.post("/urls", postURLProtect, (req, res) => {
   if (!userID) {
     return res.status(403).send("You must be logged in to shorten URLs.");
   }
-  
+
   const id = generateRandomString(); // generates the rand id key
 
   const { longURL } = req.body;// assigns the longURL value
@@ -97,7 +97,7 @@ app.post("/register", (req, res) => {
     return res.status(400).send(`Password and Email cannot be blank`);
   }
   // uses the global func to check if email exists
-  if (getUserByEmail(email)) {
+  if (getUserByEmail(email, users)) {
     return res.status(400).send(`Email already exists to an account`);
   }
 
@@ -132,7 +132,7 @@ app.get("/login", isLoggedIn, (req, res) => {
 app.post("/login", (req, res) => {
 
   let { password, email } = req.body;
-  let user = getUserByEmail(email);
+  let user = getUserByEmail(email, users);
 
 
   // checks if email exists.
