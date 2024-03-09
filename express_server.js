@@ -10,6 +10,7 @@ app.set("view engine", "ejs");
 
 // parses body for POST, to be legible to humans
 app.use(express.urlencoded({ extended: true }));
+app.use(express.json());
 // use cookieSession and encrypt the cookie
 app.use(cookieSession({
   name: 'session',
