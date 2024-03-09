@@ -2,6 +2,7 @@ const express = require("express");
 const app = express();
 const PORT = 8080; // default port 8080
 const cookieSession = require('cookie-session');
+const bcrypt = require('bcryptjs');
 const { getUserByEmail, generateRandomString, isLoggedIn, isNotLoggedIn, postURLProtect, checkShortURL, urlsForUser, users, urlDatabase } = require('./functions/helperFunctions');
 
 // setting the ejs engine for our express app
@@ -88,6 +89,9 @@ app.post("/register", (req, res) => {
   let { password, email } = req.body;
   let id = generateRandomString();
 
+  // declare a var for hashed pass
+  let hashedPassword = bcrypt.hashSync(password, 10)
+
   // checks if email or password exists. password is required on the front-end
   if (!email || !password) {
     return res.status(400).send(`Password and Email cannot be blank`);
@@ -101,7 +105,7 @@ app.post("/register", (req, res) => {
   users[id] = {
     id: id,
     email: email,
-    password: password
+    password: hashedPassword // replace plain pass with hashedPass
   };
 
 
@@ -135,9 +139,9 @@ app.post("/login", (req, res) => {
   if (!user) {
     return res.status(403).send(`Email not found, please register.`);
   }
-  // checks to see if the password in the usersdb
-  if (user.password !== password) {
-    return res.status(403).send(`Incorrect password. Please try again.`);
+  // checks to see if the hashed password in the usersdb is the same as password being used 
+  if (!bcrypt.compareSync(password, user.password)) {
+    return res.status(403).send(`Incorrect E-mail or password. Please try again.`);
   }
 
   // tells the session that this is the users cookie ID
