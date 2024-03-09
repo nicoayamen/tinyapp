@@ -20,6 +20,7 @@ app.get("/", (req, res) => {
 
   const userId = req.session.user_id;
 
+  // check to see if a cookie has been created this session
   if (!userId) {
     return res.redirect("/login")
   }
@@ -99,22 +100,21 @@ app.get('/register', isLoggedIn, function(req, res, next) {
 // post for register page
 app.post("/register", (req, res) => {
 
+  // take the user input and creates an id
   let { password, email } = req.body;
   let id = generateRandomString();
 
-  // declare a var for hashed pass
+  // password is hashed, using 10 salts. not very tasty...
   let hashedPassword = bcrypt.hashSync(password, 10)
 
   // checks if email or password exists. password is required on the front-end
   if (!email || !password) {
     return res.status(400).render("error_empty");
   }
-  // uses the global func to check if email exists
+  // uses the global func to check if email exists in the users db
   if (getUserByEmail(email, users)) {
     return res.status(400).render("error_exist");
   }
-
-  
 
   // creates an object inside users obj with random ID
   users[id] = {
@@ -141,7 +141,7 @@ app.get("/login", isLoggedIn, (req, res) => {
   res.render('login', templateVars);
 });
 
-// user creates user_id and stored in cookie called user_id
+// user creates user_id and stored in cookie session called user_id
 app.post("/login", (req, res) => {
 
   let { password, email } = req.body;
@@ -195,8 +195,6 @@ app.post("/urls/:id/delete", (req, res) => {
     delete urlDatabase[deleteID];
   }
   
-  
-
   res.redirect("/urls");
 });
 
@@ -216,7 +214,7 @@ app.post("/urls/:id/update", (req, res) => {
     return res.render("error_urlExists");
   }
 
-  // now check if url belongs to user
+  // check if url belongs to user
   if (url.userID !== userId) {
     return res.render("error_denied");
   }
@@ -226,7 +224,6 @@ app.post("/urls/:id/update", (req, res) => {
     urlDatabase[id].longURL = newLongURL; // based on the id, updates its longURL
   }
   
-
   res.redirect("/urls");
 });
 
